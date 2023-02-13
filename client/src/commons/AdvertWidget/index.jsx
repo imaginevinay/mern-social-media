@@ -7,7 +7,8 @@ const AdvertWidget = () => {
   const dark = palette.neutral.dark;
   const main = palette.neutral.main;
   const medium = palette.neutral.medium;
-
+  const BASE_URL = import.meta.env.PROD ? import.meta.env.VITE_PROD_URL : import.meta.env.VITE_LOCAL_URL ;
+  const imgSource = `${BASE_URL}/assets/info4.jpeg`
   return (
     <WidgetWrapper>
       <FlexBetween>
@@ -20,7 +21,7 @@ const AdvertWidget = () => {
         width="100%"
         height="auto"
         alt="advert"
-        src="http://localhost:5001/assets/info4.jpeg"
+        src={imgSource}
         style={{ borderRadius: "0.75rem", margin: "0.75rem 0" }}
       />
       <FlexBetween>

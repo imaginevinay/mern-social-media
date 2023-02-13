@@ -24,8 +24,7 @@ import WidgetWrapper from "../../components/WidgetsWrapper";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "../../state";
-import FlexStart from "../../components/FlexStart";
-
+import {createUserPost} from '../../apis'
 const CreatePostWidget = ({ picturePath }) => {
   const dispatch = useDispatch();
   const [image, setImage] = useState(null);
@@ -34,7 +33,6 @@ const CreatePostWidget = ({ picturePath }) => {
   const { _id } = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
   const medium = palette.neutral.medium;
-  const mediumMain = palette.neutral.mediumMain;
 
   const handlePost = async () => {
     if(!post) {
@@ -47,13 +45,8 @@ const CreatePostWidget = ({ picturePath }) => {
       formData.append("picture", image);
       formData.append("picturePath", image.name);
     }
-
-    const response = await fetch(`http://localhost:5001/posts`, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}` },
-      body: formData,
-    });
-    const posts = await response.json();
+    
+    const posts = await createUserPost(formData);
     dispatch(setPosts({ posts }));
     setImage(null);
     setPost("");

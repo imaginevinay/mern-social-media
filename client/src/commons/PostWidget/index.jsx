@@ -11,6 +11,7 @@ import {
   import { useState } from "react";
   import { useDispatch, useSelector } from "react-redux";
   import { setPost } from "../../state";
+  import { toggleLikePost } from '../../apis'
   
   const PostWidget = ({
     postId,
@@ -25,7 +26,6 @@ import {
   }) => {
     const [isComments, setIsComments] = useState(false);
     const dispatch = useDispatch();
-    const token = useSelector((state) => state.token);
     const loggedInUserId = useSelector((state) => state.user._id);
     const isLiked = Boolean(likes[loggedInUserId]);
     const likeCount = Object.keys(likes).length;
@@ -33,17 +33,11 @@ import {
     const { palette } = useTheme();
     const main = palette.neutral.main;
     const primary = palette.primary.main;
+    const BASE_URL = import.meta.env.PROD ? import.meta.env.VITE_PROD_URL : import.meta.env.VITE_LOCAL_URL ;
+    const imgSource = `${BASE_URL}/assets/${picturePath}`
   
     const patchLike = async () => {
-      const response = await fetch(`http://localhost:5001/posts/${postId}/like`, {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId: loggedInUserId }),
-      });
-      const updatedPost = await response.json();
+      const updatedPost = await toggleLikePost(postId, loggedInUserId);
       dispatch(setPost({ post: updatedPost }));
     };
   
@@ -65,7 +59,7 @@ import {
             height="auto"
             alt="post"
             style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
-            src={`http://localhost:5001/assets/${picturePath}`}
+            src={imgSource}
           />
         )}
         <FlexBetween mt="0.25rem">

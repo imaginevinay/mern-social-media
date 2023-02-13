@@ -1,25 +1,20 @@
 import { Box, useMediaQuery } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import Navbar from "../../commons/navBar";
 import FriendListWidget from "../../commons/FriendListWidget";
 import CreatePostWidget from "../../commons/CreatePostWidget";
 import PostsWrapperWidget from "../../commons/PostsWrapperWidget";
 import UserWidget from "../../commons/UserWidget";
+import { getUserData } from "../../apis";
 
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
   const { userId } = useParams();
-  const token = useSelector((state) => state.token);
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
 
   const getUser = async () => {
-    const response = await fetch(`http://localhost:5001/users/${userId}`, {
-      method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const data = await response.json();
+    const data = await getUserData(userId);
     setUser(data);
   };
 
