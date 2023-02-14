@@ -1,22 +1,22 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading } from "../state";
 
 const BASE_URL = import.meta.env.PROD ? import.meta.env.VITE_PROD_URL : import.meta.env.VITE_LOCAL_URL ;
-// const token = useSelector((state) => state.token);
+// const dispatch = useDispatch();
 
 export const registerUser = async (formData) => {
+  // dispatch(setLoading(true))
   const savedUserResponse = await fetch(`${BASE_URL}/auth/register`, {
     method: "POST",
     body: formData,
   });
   const savedUser = await savedUserResponse.json();
+  // dispatch(setLoading(false))
   return savedUser;
 };
 
 export const loginUser = async (formData) => {
-  console.log('BASE URL', BASE_URL)
-  console.log('import.meta.env.PROD', import.meta.env.PROD)
-  console.log('import.meta.env.VITE_PROD_URL', import.meta.env.VITE_PROD_URL)
-  console.log('import.meta.env.VITE_LOCAL_URL', import.meta.env.VITE_LOCAL_URL)
+
   const loggedInResponse = await fetch(`${BASE_URL}/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

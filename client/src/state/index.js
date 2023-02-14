@@ -4,7 +4,11 @@ const initialState = {
     mode: "light",
     user: null,
     token: null,
-    posts: []
+    posts: [],
+    isLoading: false,
+    isOpenSnackbar: false,
+    snackbarType: 'success',
+    snackbarMessage: ''
 }
 
 export const authSlice = createSlice({
@@ -39,8 +43,16 @@ export const authSlice = createSlice({
             });
             state.posts = updatedPosts;
         },
+        setLoading: (state, action) => {
+            state.isLoading = action.payload;
+        },
+        setSnackBar: (state, action) => {
+            state.isOpenSnackbar = action.payload.isOpenSnackbar;
+            state.snackbarType = action.payload.snackbarType;
+            state.snackbarMessage = action.payload.snackbarMessage;
+        }
     }
 })
 
-export const { setMode, setLogin, setLogout, setFriends, setPosts, setPost } = authSlice.actions;
+export const { setMode, setLogin, setLogout, setFriends, setPosts, setPost, setLoading, setSnackBar } = authSlice.actions;
 export default authSlice.reducer;

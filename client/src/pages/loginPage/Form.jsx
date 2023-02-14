@@ -12,7 +12,7 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setLogin } from "../../state/index";
+import { setLogin, setLoading, setSnackBar } from "../../state/index";
 import Dropzone from "react-dropzone";
 import FlexBetween from "../../components/FlexBetween";
 import { loginUser, registerUser } from "../../apis";
@@ -63,18 +63,20 @@ const Form = () => {
       formData.append(value, values[value]);
     }
     formData.append("picturePath", values.picture.name);
-
+    dispatch(setLoading(true))
     const savedUser = await registerUser(formData);
-
     if (!savedUser?.error) {
       onSubmitProps.resetForm();
+      dispatch(setLoading(false))
       setPageType("login");
     }
+    dispatch(setLoading(false))
   };
 
   const login = async (values, onSubmitProps) => {
+    dispatch(setLoading(true))
     const loggedIn = await loginUser();
-    if (loggedIn?.token) {
+    if (!loggedIn?.error) {
       onSubmitProps.resetForm(values);
       dispatch(
         setLogin({
@@ -82,8 +84,20 @@ const Form = () => {
           token: loggedIn.token,
         })
       );
+      dispatch(setLoading(false));
+      dispatch(setSnackBar({
+        isOpenSnackbar: true,
+        snackbarType: 'success',
+        snackbarMessage: 'Login Successfull'
+      }))
       navigate("/home");
     }
+    dispatch(setLoading(false));
+    dispatch(setSnackBar({
+      isOpenSnackbar: true,
+      snackbarType: 'fail',
+      snackbarMessage: loggedIn?.error
+    }))
   };
 
   const handleFormSubmit = async (values, onSubmitProps) => {
