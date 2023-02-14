@@ -13,6 +13,10 @@ export const registerUser = async (formData) => {
 };
 
 export const loginUser = async (formData) => {
+  console.log('BASE URL', BASE_URL)
+  console.log('import.meta.env.PROD', import.meta.env.PROD)
+  console.log('import.meta.env.VITE_PROD_URL', import.meta.env.VITE_PROD_URL)
+  console.log('import.meta.env.VITE_LOCAL_URL', import.meta.env.VITE_LOCAL_URL)
   const loggedInResponse = await fetch(`${BASE_URL}/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
