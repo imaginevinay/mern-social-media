@@ -24,7 +24,7 @@ export const loginUser = async (formData) => {
 
 export const getUserData = async (userId) => {
   const token = useSelector((state) => state.token);
-  const response = await fetch(`http://localhost:5001/users/${userId}`, {
+  const response = await fetch(`${BASE_URL}/users/${userId}`, {
     method: "GET",
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -34,7 +34,7 @@ export const getUserData = async (userId) => {
 
 export const createUserPost = async(formData) => {
   const token = useSelector((state) => state.token);
-  const response = await fetch(`http://localhost:5001/posts`, {
+  const response = await fetch(`${BASE_URL}/posts`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
       body: formData,
@@ -46,7 +46,7 @@ export const createUserPost = async(formData) => {
 export const getFriendsData = async (userId) => {
   const token = useSelector((state) => state.token);
   const response = await fetch(
-    `http://localhost:5001/users/${userId}/friends`,
+    `${BASE_URL}/users/${userId}/friends`,
     {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
@@ -58,7 +58,7 @@ export const getFriendsData = async (userId) => {
 
 export const getPostsData = async () => {
   const token = useSelector((state) => state.token);
-  const response = await fetch("http://localhost:5001/posts", {
+  const response = await fetch("${BASE_URL}/posts", {
     method: "GET",
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -69,7 +69,7 @@ export const getPostsData = async () => {
 export const getUserPostsData = async (userId) => {
   const token = useSelector((state) => state.token);
   const response = await fetch(
-    `http://localhost:5001/posts/${userId}/posts`,
+    `${BASE_URL}/posts/${userId}/posts`,
     {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
@@ -81,7 +81,7 @@ export const getUserPostsData = async (userId) => {
 
 export const toggleLikePost = async (postId, loggedInUserId) => {
   const token = useSelector((state) => state.token);
-  const response = await fetch(`http://localhost:5001/posts/${postId}/like`, {
+  const response = await fetch(`${BASE_URL}/posts/${postId}/like`, {
     method: "PATCH",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -96,7 +96,7 @@ export const toggleLikePost = async (postId, loggedInUserId) => {
 export const addRemoveFriend = async (_id, friendId) => {
   const token = useSelector((state) => state.token);
   const response = await fetch(
-    `http://localhost:5001/users/${_id}/${friendId}`,
+    `${BASE_URL}/users/${_id}/${friendId}`,
     {
       method: "PATCH",
       headers: {
