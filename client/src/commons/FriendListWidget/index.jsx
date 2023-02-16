@@ -3,18 +3,31 @@ import Friend from "../../components/Friend";
 import WidgetWrapper from "../../components/WidgetsWrapper";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setFriends } from "../../state";
+import { setFriends, setLoading, setSnackBar } from "../../state";
 import { getFriendsData } from '../../apis';
 
 const FriendListWidget = ({ userId }) => {
   const dispatch = useDispatch();
   const { palette } = useTheme();
-  const token = useSelector((state) => state.token);
   const friends = useSelector((state) => state.user.friends);
 
   const getFriends = async () => {
-    const data = await getFriendsData(userId);
-    dispatch(setFriends({ friends: data }));
+    try {
+      dispatch(setLoading(true))
+      const data = await getFriendsData(userId);
+      dispatch(setFriends({ friends: data }));
+      dispatch(setLoading(false))
+    } catch (error) {
+      dispatch(setLoading(false))
+      dispatch(
+        setSnackBar({
+          isOpenSnackbar: true,
+          snackbarType: "fail",
+          snackbarMessage: error.message,
+        })
+      );
+    }
+    
   };
 
   useEffect(() => {

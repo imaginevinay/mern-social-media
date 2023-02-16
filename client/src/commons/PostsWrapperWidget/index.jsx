@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setPosts } from "../../state";
+import { setLoading, setPosts, setSnackBar } from "../../state";
 import PostWidget from "../PostWidget";
 import {getPostsData, getUserPostsData} from '../../apis'
 const PostsWrapperWidget = ({ userId, isProfile = false }) => {
@@ -9,13 +9,41 @@ const PostsWrapperWidget = ({ userId, isProfile = false }) => {
   const token = useSelector((state) => state.token);
 
   const getPosts = async () => {
-    const data = await getPostsData();
-    dispatch(setPosts({ posts: data }));
+    try {
+      dispatch(setLoading(true))
+      const data = await getPostsData();
+      dispatch(setPosts({ posts: data }));
+      dispatch(setLoading(false))
+    } catch (error) {
+      dispatch(setLoading(false))
+      dispatch(
+        setSnackBar({
+          isOpenSnackbar: true,
+          snackbarType: "fail",
+          snackbarMessage: error.message,
+        })
+      );
+    }
+    
   };
 
   const getUserPosts = async () => {
-    const data = await getUserPostsData(userId);
-    dispatch(setPosts({ posts: data }));
+    try {
+      dispatch(setLoading(true))
+      const data = await getUserPostsData(userId);
+      dispatch(setPosts({ posts: data }));
+      dispatch(setLoading(false))
+    } catch (error) {
+      dispatch(setLoading(false))
+      dispatch(
+        setSnackBar({
+          isOpenSnackbar: true,
+          snackbarType: "fail",
+          snackbarMessage: error.message,
+        })
+      );
+    }
+    
   };
 
   useEffect(() => {

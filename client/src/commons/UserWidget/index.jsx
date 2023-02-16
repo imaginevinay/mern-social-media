@@ -8,11 +8,11 @@ import { Box, Typography, Divider, useTheme } from "@mui/material";
 import UserImage from "../../components/UserImage";
 import FlexBetween from "../../components/FlexBetween";
 import WidgetWrapper from "../../components/WidgetsWrapper";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUserData } from "../../apis";
-
+import { setLoading, setSnackBar } from '../../state'
 const UserWidget = ({ userId, picturePath }) => {
   const [user, setUser] = useState(null);
   const { palette } = useTheme();
@@ -20,10 +20,25 @@ const UserWidget = ({ userId, picturePath }) => {
   const dark = palette.neutral.dark;
   const medium = palette.neutral.medium;
   const main = palette.neutral.main;
+  const dispatch = useDispatch();
 
   const getUser = async () => {
-    const data = await getUserData(userId);
-    setUser(data);
+    try {
+      dispatch(setLoading(true));
+      const data = await getUserData(userId);
+      setUser(data); 
+      dispatch(setLoading(false));     
+    } catch (error) {
+      dispatch(setLoading(false));
+      dispatch(
+        setSnackBar({
+          isOpenSnackbar: true,
+          snackbarType: "fail",
+          snackbarMessage: error.message,
+        })
+      );
+    }
+    
   };
 
   useEffect(() => {

@@ -5,25 +5,30 @@ const BASE_URL = import.meta.env.PROD ? import.meta.env.VITE_PROD_URL : import.m
 // const dispatch = useDispatch();
 
 export const registerUser = async (formData) => {
-  // dispatch(setLoading(true))
-  const savedUserResponse = await fetch(`${BASE_URL}/auth/register`, {
+  const response = await fetch(`${BASE_URL}/auth/register`, {
     method: "POST",
     body: formData,
   });
-  const savedUser = await savedUserResponse.json();
-  // dispatch(setLoading(false))
-  return savedUser;
+  const savedUser = await response.json();
+  if(response?.ok) {
+    return savedUser;
+  } else {
+    throw new Error(savedUser?.error)
+  }
 };
 
 export const loginUser = async (formData) => {
-
-  const loggedInResponse = await fetch(`${BASE_URL}/auth/login`, {
+  const response = await fetch(`${BASE_URL}/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(formData),
   });
-  const loggedIn = await loggedInResponse.json();
-  return loggedIn;
+  const loggedIn = await response.json();
+  if(response?.ok) {
+    return loggedIn;
+  } else {
+    throw new Error(loggedIn?.error)
+  }
 };
 
 export const getUserData = async (userId) => {
@@ -33,7 +38,11 @@ export const getUserData = async (userId) => {
     headers: { Authorization: `Bearer ${token}` },
   });
   const data = await response.json();
-  setUser(data);
+  if(response?.ok) {
+    return data;
+  } else {
+    throw new Error(data?.error)
+  }
 };
 
 export const createUserPost = async(formData) => {
@@ -44,7 +53,11 @@ export const createUserPost = async(formData) => {
       body: formData,
     });
   const posts = await response.json();
-  return posts;
+  if(response?.ok) {
+    return posts;
+  } else {
+    throw new Error(posts?.error)
+  }
 }
 
 export const getFriendsData = async (userId) => {
@@ -57,7 +70,11 @@ export const getFriendsData = async (userId) => {
     }
   );
   const data = await response.json();
-  return data
+  if(response?.ok) {
+    return data;
+  } else {
+    throw new Error(data?.error)
+  }
 };
 
 export const getPostsData = async () => {
@@ -67,7 +84,11 @@ export const getPostsData = async () => {
     headers: { Authorization: `Bearer ${token}` },
   });
   const data = await response.json();
-  return data
+  if(response?.ok) {
+    return data;
+  } else {
+    throw new Error(data?.error)
+  }
 };
 
 export const getUserPostsData = async (userId) => {
@@ -80,7 +101,11 @@ export const getUserPostsData = async (userId) => {
     }
   );
   const data = await response.json();
-  return data
+  if(response?.ok) {
+    return data;
+  } else {
+    throw new Error(data?.error)
+  }
 };
 
 export const toggleLikePost = async (postId, loggedInUserId) => {
@@ -94,7 +119,11 @@ export const toggleLikePost = async (postId, loggedInUserId) => {
     body: JSON.stringify({ userId: loggedInUserId }),
   });
   const updatedPost = await response.json();
-  return updatedPost;
+  if(response?.ok) {
+    return updatedPost;
+  } else {
+    throw new Error(updatedPost?.error)
+  }
 };
 
 export const addRemoveFriend = async (_id, friendId) => {
@@ -110,5 +139,9 @@ export const addRemoveFriend = async (_id, friendId) => {
     }
   );
   const data = await response.json();
-  return data;
+  if(response?.ok) {
+    return data;
+  } else {
+    throw new Error(data?.error)
+  }
 }

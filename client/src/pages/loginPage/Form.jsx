@@ -58,46 +58,70 @@ const Form = () => {
 
   const register = async (values, onSubmitProps) => {
     // this allows us to send form info with image
-    const formData = new FormData();
-    for (let value in values) {
-      formData.append(value, values[value]);
+    try {
+      dispatch(setLoading(true));
+      const formData = new FormData();
+      for (let value in values) {
+        formData.append(value, values[value]);
+      }
+      formData.append("picturePath", values.picture.name);
+      const savedUser = await registerUser(formData);
+      if (savedUser) {
+        onSubmitProps.resetForm();
+        setPageType("login");
+        dispatch(setLoading(false));
+        dispatch(
+          setSnackBar({
+            isOpenSnackbar: true,
+            snackbarType: "success",
+            snackbarMessage: 'Registration successfull !',
+          })
+        );
+      }
+    } catch (error) {
+      dispatch(setLoading(false));
+      dispatch(
+        setSnackBar({
+          isOpenSnackbar: true,
+          snackbarType: "fail",
+          snackbarMessage: error.message,
+        })
+      );
     }
-    formData.append("picturePath", values.picture.name);
-    dispatch(setLoading(true))
-    const savedUser = await registerUser(formData);
-    if (!savedUser?.error) {
-      onSubmitProps.resetForm();
-      dispatch(setLoading(false))
-      setPageType("login");
-    }
-    dispatch(setLoading(false))
   };
 
   const login = async (values, onSubmitProps) => {
-    dispatch(setLoading(true))
-    const loggedIn = await loginUser();
-    if (!loggedIn?.error) {
-      onSubmitProps.resetForm(values);
+    try {
+      dispatch(setLoading(true));
+      const loggedIn = await loginUser(values);
+      if (loggedIn) {
+        onSubmitProps.resetForm(values);
+        dispatch(
+          setLogin({
+            user: loggedIn.user,
+            token: loggedIn.token,
+          })
+        );
+        dispatch(setLoading(false));
+        dispatch(
+          setSnackBar({
+            isOpenSnackbar: true,
+            snackbarType: "success",
+            snackbarMessage: "Login Successfull",
+          })
+        );
+        navigate("/home");
+      }
+    } catch (error) {
+      dispatch(setLoading(false));
       dispatch(
-        setLogin({
-          user: loggedIn.user,
-          token: loggedIn.token,
+        setSnackBar({
+          isOpenSnackbar: true,
+          snackbarType: "fail",
+          snackbarMessage: error.message,
         })
       );
-      dispatch(setLoading(false));
-      dispatch(setSnackBar({
-        isOpenSnackbar: true,
-        snackbarType: 'success',
-        snackbarMessage: 'Login Successfull'
-      }))
-      navigate("/home");
     }
-    dispatch(setLoading(false));
-    dispatch(setSnackBar({
-      isOpenSnackbar: true,
-      snackbarType: 'fail',
-      snackbarMessage: loggedIn?.error
-    }))
   };
 
   const handleFormSubmit = async (values, onSubmitProps) => {

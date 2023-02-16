@@ -24,7 +24,8 @@ import WidgetWrapper from "../../components/WidgetsWrapper";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "../../state";
-import {createUserPost} from '../../apis'
+import {createUserPost} from '../../apis';
+import {setLoading, setSnackBar} from '../../state/index'
 const CreatePostWidget = ({ picturePath }) => {
   const dispatch = useDispatch();
   const [image, setImage] = useState(null);
@@ -35,21 +36,43 @@ const CreatePostWidget = ({ picturePath }) => {
   const medium = palette.neutral.medium;
 
   const handlePost = async () => {
-    if(!post) {
-      return
+    try {
+      if(!post) {
+        return
+      }
+      dispatch(setLoading(true));
+      const formData = new FormData();
+      formData.append("userId", _id);
+      formData.append("description", post);
+      if (image) {
+        formData.append("picture", image);
+        formData.append("picturePath", image.name);
+      }
+      
+      const posts = await createUserPost(formData);
+      dispatch(setPosts({ posts }));
+      setImage(null);
+      setPost("");
+      dispatch(setLoading(false));
+      dispatch(
+        setSnackBar({
+          isOpenSnackbar: true,
+          snackbarType: "success",
+          snackbarMessage: "Your post has been published !",
+        })
+      );
+
+    } catch (error) {
+      dispatch(setLoading(false));
+      dispatch(
+        setSnackBar({
+          isOpenSnackbar: true,
+          snackbarType: "fail",
+          snackbarMessage: error.message,
+        })
+      );
     }
-    const formData = new FormData();
-    formData.append("userId", _id);
-    formData.append("description", post);
-    if (image) {
-      formData.append("picture", image);
-      formData.append("picturePath", image.name);
-    }
-    
-    const posts = await createUserPost(formData);
-    dispatch(setPosts({ posts }));
-    setImage(null);
-    setPost("");
+   
   };
 
   return (

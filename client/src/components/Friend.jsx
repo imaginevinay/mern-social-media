@@ -3,7 +3,7 @@ import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { addRemoveFriend } from "../apis";
-import { setFriends } from "../state";
+import { setFriends, setLoading, setSnackBar } from "../state";
 import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
 
@@ -29,8 +29,29 @@ const Friend = ({
   const isFriend = friends.find((friend) => friend._id === friendId);
 
   const patchFriend = async () => {
-    const data = await addRemoveFriend(_id, friendId);
-    dispatch(setFriends({ friends: data }));
+    try {
+      dispatch(setLoading(true))
+      const data = await addRemoveFriend(_id, friendId);
+      dispatch(setFriends({ friends: data }));
+      dispatch(setLoading(false))
+      dispatch(
+        setSnackBar({
+          isOpenSnackbar: true,
+          snackbarType: "success",
+          snackbarMessage: isFriend ? 'Added as a friend' : 'Removed from friendlist',
+        })
+      );
+    } catch (error) {
+      dispatch(setLoading(false))
+      dispatch(
+        setSnackBar({
+          isOpenSnackbar: true,
+          snackbarType: "fail",
+          snackbarMessage: error.message,
+        })
+      );
+    }
+    
   };
 
   return (

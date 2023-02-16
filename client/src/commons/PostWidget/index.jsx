@@ -10,7 +10,7 @@ import {
   import WidgetWrapper from "../../components/WidgetsWrapper";
   import { useState } from "react";
   import { useDispatch, useSelector } from "react-redux";
-  import { setPost } from "../../state";
+  import { setPost, setLoading, setSnackBar } from "../../state";
   import { toggleLikePost } from '../../apis'
   
   const PostWidget = ({
@@ -37,8 +37,29 @@ import {
     const imgSource = `${BASE_URL}/assets/${picturePath}`
   
     const patchLike = async () => {
+    try {
+      dispatch(setLoading(true))
       const updatedPost = await toggleLikePost(postId, loggedInUserId);
       dispatch(setPost({ post: updatedPost }));
+      dispatch(setLoading(false))
+      dispatch(
+        setSnackBar({
+          isOpenSnackbar: true,
+          snackbarType: "success",
+          snackbarMessage: "You have liked a post",
+        })
+      );
+    } catch (error) {
+      dispatch(setLoading(false))
+      dispatch(
+        setSnackBar({
+          isOpenSnackbar: true,
+          snackbarType: "fail",
+          snackbarMessage: error.message,
+        })
+      );
+    }
+      
     };
   
     return (
