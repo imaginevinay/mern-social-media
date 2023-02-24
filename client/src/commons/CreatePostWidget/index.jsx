@@ -38,6 +38,13 @@ const CreatePostWidget = ({ picturePath }) => {
   const handlePost = async () => {
     try {
       if(!post) {
+        dispatch(
+          setSnackBar({
+            isOpenSnackbar: true,
+            snackbarType: "fail",
+            snackbarMessage: "Please enter some text for your post",
+          })
+        );
         return
       }
       dispatch(setLoading(true));
@@ -49,7 +56,7 @@ const CreatePostWidget = ({ picturePath }) => {
         formData.append("picturePath", image.name);
       }
       
-      const posts = await createUserPost(formData);
+      const posts = await createUserPost(formData, token);
       dispatch(setPosts({ posts }));
       setImage(null);
       setPost("");

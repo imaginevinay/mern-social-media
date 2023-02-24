@@ -21,11 +21,11 @@ const UserWidget = ({ userId, picturePath }) => {
   const medium = palette.neutral.medium;
   const main = palette.neutral.main;
   const dispatch = useDispatch();
-
+  const token = useSelector((state) => state.token);
   const getUser = async () => {
     try {
       dispatch(setLoading(true));
-      const data = await getUserData(userId);
+      const data = await getUserData(userId, token);
       setUser(data); 
       dispatch(setLoading(false));     
     } catch (error) {

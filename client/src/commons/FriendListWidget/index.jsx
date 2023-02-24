@@ -10,11 +10,11 @@ const FriendListWidget = ({ userId }) => {
   const dispatch = useDispatch();
   const { palette } = useTheme();
   const friends = useSelector((state) => state.user.friends);
-
+  const token = useSelector((state) => state.token);
   const getFriends = async () => {
     try {
       dispatch(setLoading(true))
-      const data = await getFriendsData(userId);
+      const data = await getFriendsData(userId, token);
       dispatch(setFriends({ friends: data }));
       dispatch(setLoading(false))
     } catch (error) {

@@ -1,8 +1,4 @@
-import { useDispatch, useSelector } from "react-redux";
-import { setLoading } from "../state";
-
 const BASE_URL = import.meta.env.PROD ? import.meta.env.VITE_PROD_URL : import.meta.env.VITE_LOCAL_URL ;
-// const dispatch = useDispatch();
 
 export const registerUser = async (formData) => {
   const response = await fetch(`${BASE_URL}/auth/register`, {
@@ -31,8 +27,7 @@ export const loginUser = async (formData) => {
   }
 };
 
-export const getUserData = async (userId) => {
-  const token = useSelector((state) => state.token);
+export const getUserData = async (userId, token) => {
   const response = await fetch(`${BASE_URL}/users/${userId}`, {
     method: "GET",
     headers: { Authorization: `Bearer ${token}` },
@@ -45,8 +40,7 @@ export const getUserData = async (userId) => {
   }
 };
 
-export const createUserPost = async(formData) => {
-  const token = useSelector((state) => state.token);
+export const createUserPost = async(formData, token) => {
   const response = await fetch(`${BASE_URL}/posts`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
@@ -60,8 +54,7 @@ export const createUserPost = async(formData) => {
   }
 }
 
-export const getFriendsData = async (userId) => {
-  const token = useSelector((state) => state.token);
+export const getFriendsData = async (userId, token) => {
   const response = await fetch(
     `${BASE_URL}/users/${userId}/friends`,
     {
@@ -77,9 +70,8 @@ export const getFriendsData = async (userId) => {
   }
 };
 
-export const getPostsData = async () => {
-  const token = useSelector((state) => state.token);
-  const response = await fetch("${BASE_URL}/posts", {
+export const getPostsData = async (token) => {
+  const response = await fetch(`${BASE_URL}/posts`, {
     method: "GET",
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -91,8 +83,7 @@ export const getPostsData = async () => {
   }
 };
 
-export const getUserPostsData = async (userId) => {
-  const token = useSelector((state) => state.token);
+export const getUserPostsData = async (userId, token) => {
   const response = await fetch(
     `${BASE_URL}/posts/${userId}/posts`,
     {
@@ -108,8 +99,7 @@ export const getUserPostsData = async (userId) => {
   }
 };
 
-export const toggleLikePost = async (postId, loggedInUserId) => {
-  const token = useSelector((state) => state.token);
+export const toggleLikePost = async (postId, loggedInUserId, token) => {
   const response = await fetch(`${BASE_URL}/posts/${postId}/like`, {
     method: "PATCH",
     headers: {
@@ -126,8 +116,7 @@ export const toggleLikePost = async (postId, loggedInUserId) => {
   }
 };
 
-export const addRemoveFriend = async (_id, friendId) => {
-  const token = useSelector((state) => state.token);
+export const addRemoveFriend = async (_id, friendId, token) => {
   const response = await fetch(
     `${BASE_URL}/users/${_id}/${friendId}`,
     {

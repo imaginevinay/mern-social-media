@@ -29,7 +29,7 @@ import {
     const loggedInUserId = useSelector((state) => state.user._id);
     const isLiked = Boolean(likes[loggedInUserId]);
     const likeCount = Object.keys(likes).length;
-  
+    const token = useSelector((state) => state.token);
     const { palette } = useTheme();
     const main = palette.neutral.main;
     const primary = palette.primary.main;
@@ -39,7 +39,7 @@ import {
     const patchLike = async () => {
     try {
       dispatch(setLoading(true))
-      const updatedPost = await toggleLikePost(postId, loggedInUserId);
+      const updatedPost = await toggleLikePost(postId, loggedInUserId, token);
       dispatch(setPost({ post: updatedPost }));
       dispatch(setLoading(false))
       dispatch(

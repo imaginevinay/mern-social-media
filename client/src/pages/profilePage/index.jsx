@@ -7,14 +7,16 @@ import CreatePostWidget from "../../commons/CreatePostWidget";
 import PostsWrapperWidget from "../../commons/PostsWrapperWidget";
 import UserWidget from "../../commons/UserWidget";
 import { getUserData } from "../../apis";
+import { useSelector } from "react-redux";
 
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
   const { userId } = useParams();
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
+  const token = useSelector((state) => state.token);
 
   const getUser = async () => {
-    const data = await getUserData(userId);
+    const data = await getUserData(userId, token);
     setUser(data);
   };
 

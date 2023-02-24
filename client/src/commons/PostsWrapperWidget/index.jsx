@@ -11,7 +11,7 @@ const PostsWrapperWidget = ({ userId, isProfile = false }) => {
   const getPosts = async () => {
     try {
       dispatch(setLoading(true))
-      const data = await getPostsData();
+      const data = await getPostsData(token);
       dispatch(setPosts({ posts: data }));
       dispatch(setLoading(false))
     } catch (error) {
@@ -30,7 +30,7 @@ const PostsWrapperWidget = ({ userId, isProfile = false }) => {
   const getUserPosts = async () => {
     try {
       dispatch(setLoading(true))
-      const data = await getUserPostsData(userId);
+      const data = await getUserPostsData(userId, token);
       dispatch(setPosts({ posts: data }));
       dispatch(setLoading(false))
     } catch (error) {

@@ -31,7 +31,7 @@ const Friend = ({
   const patchFriend = async () => {
     try {
       dispatch(setLoading(true))
-      const data = await addRemoveFriend(_id, friendId);
+      const data = await addRemoveFriend(_id, friendId, token);
       dispatch(setFriends({ friends: data }));
       dispatch(setLoading(false))
       dispatch(
